@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sistema Contable ARCA Demo</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success: #10b981;
+      --danger: #ef4444;
+      --border: #e2e8f0;
+      --sidebar: #0f172a;
+    }
+    
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+    
+    /* Sidebar */
+    .sidebar { width: 260px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 50; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+    .sidebar-brand { padding: 1.5rem; font-size: 1.4rem; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 0.75rem; }
+    .nav-menu { flex: 1; padding: 1rem 0; display: flex; flex-direction: column; overflow-y: auto; }
+    .nav-item { padding: 1rem 1.5rem; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 1rem; font-size: 0.95rem; font-weight: 500; }
+    .nav-item:hover, .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-right: 3px solid var(--primary); }
+    
+    /* Main Layout */
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .header { height: 70px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.02); z-index: 10; }
+    .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; padding: 0.5rem; }
+    .header-title { font-size: 1.1rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
+    .user-profile { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 0.9rem; }
+    .avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), #8b5cf6); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
+    
+    /* Views */
+    .view-content { display: none; flex: 1; padding: 1.5rem; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .view-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .page-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .page-title h2 { margin: 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #fff; border: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); display: flex; align-items: center; gap: 0.5rem; }
+    .btn-primary:active { transform: scale(0.97); }
+    
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    @media (min-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    
+    .stat-card { background: var(--card); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.5rem; }
+    .stat-header { display: flex; justify-content: space-between; align-items: center; }
+    .stat-title { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+    .stat-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text); }
+    .stat-change { color: var(--success); font-size: 0.8rem; font-weight: 600; background: rgba(16, 185, 129, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; width: fit-content; }
+    
+    /* Tables */
+    .table-container { background: var(--card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 2rem; }
+    .table-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .table-header h3 { margin: 0; font-size: 1.1rem; font-weight: 700; }
+    .table-responsive { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
+    th { background: #f8fafc; padding: 0.85rem 1.25rem; font-weight: 600; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; font-weight: 500; }
+    tr:last-child td { border-bottom: none; }
+    
+    .badge { padding: 0.35rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+    .badge-success { background: #d1fae5; color: #047857; }
+    .badge-danger { background: #fee2e2; color: #b91c1c; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    
+    /* Modals */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100; padding: 1rem; }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
+    .modal-box { background: var(--card); width: 100%; max-width: 450px; border-radius: 16px; padding: 1.5rem; transform: scale(0.95); transition: transform 0.3s; }
+    .modal-overlay.show .modal-box { transform: scale(1); }
+    
+    .modal-title { margin-top: 0; margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); }
+    .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; background: var(--bg); outline: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+    
+    .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border); padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--text); }
+    
+    .mobile-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; top: 0; left: 0; height: 100%; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .menu-toggle { display: block; }
+      .mobile-overlay.open { opacity: 1; pointer-events: auto; }
+      .user-profile span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span style="color:var(--primary)">▲</span> ARCA Studio
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item active" onclick="switchView('dashboard', this)">📊 Dashboard</div>
+      <div class="nav-item" onclick="openModal('invoiceModal'); if(window.innerWidth<=768) toggleSidebar();">📝 Emitir Factura</div>
+      <div class="nav-item" onclick="switchView('clientes', this)">👥 Clientes</div>
+      <div class="nav-item" onclick="switchView('cuentas', this)">💰 Cuentas Corrientes</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <div class="header-title">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <span class="desktop-only-text">Facturador Electrónico V3.0</span>
+      </div>
+      <div class="user-profile">
+        <span>Usuario Demo</span>
+        <div class="avatar">UD</div>
+      </div>
+    </div>
+    
+    <!-- VIEW: DASHBOARD -->
+    <div class="view-content active" id="view-dashboard">
+      <div class="page-title">
+        <h2>Resumen Operativo</h2>
+        <button class="btn-primary" onclick="openModal('invoiceModal')">+ Nueva Factura</button>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Facturación Mensual</div>
+            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);">💰</div>
+          </div>
+          <div class="stat-value" id="dashTotalMonto">$2,450,000</div>
+          <div class="stat-change">↑ 12.5% vs mes anterior</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Comprobantes (Mes)</div>
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">🧾</div>
+          </div>
+          <div class="stat-value" id="dashTotalFacturas">142</div>
+          <div class="stat-change">↑ 5% vs mes anterior</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Deuda Activa (C.C.)</div>
+            <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);">💳</div>
+          </div>
+          <div class="stat-value" id="dashDeuda">$34,500</div>
+          <div class="stat-change" style="color: var(--text-muted); background: var(--bg);">Saldo pendiente</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Estado Servidor ARCA</div>
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">📡</div>
+          </div>
+          <div class="stat-value" style="color: var(--success); font-size: 1.4rem;">En Línea (WSFE)</div>
+          <div class="stat-change" style="color: var(--text-muted); background: var(--bg);">Latencia: 24ms</div>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <div class="table-header">
+          <h3>Últimos Comprobantes Emitidos</h3>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Comprobante</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Importe</th>
+                <th>Estado AFIP</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW: CLIENTES -->
+    <div class="view-content" id="view-clientes">
+      <div class="page-title">
+        <h2>Directorio de Clientes</h2>
+        <button class="btn-primary" onclick="openModal('clientModal')">+ Nuevo Cliente</button>
+      </div>
+      <div class="table-container">
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Razón Social / Nombre</th>
+                <th>CUIT / DNI</th>
+                <th>Condición IVA</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="clientsTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW: CUENTAS CORRIENTES -->
+    <div class="view-content" id="view-cuentas">
+      <div class="page-title">
+        <h2>Cuentas Corrientes</h2>
+        <button class="btn-primary" onclick="openModal('cuentaModal')">+ Nuevo Movimiento</button>
+      </div>
+      <div class="table-container">
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Último Movimiento</th>
+                <th>Tipo</th>
+                <th>Saldo Actual</th>
+              </tr>
+            </thead>
+            <tbody id="cuentasTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FACTURA -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="modal-box">
+      <h3 class="modal-title"><span>🧾</span> Emitir Factura</h3>
+      <div class="form-group">
+        <label>Cliente</label>
+        <select id="invClientSelect"></select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de Comprobante</label>
+        <select id="invType">
+          <option>Factura C (Monotributo)</option>
+          <option>Factura A (Responsable Inscripto)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Concepto / Detalle</label>
+        <input type="text" id="invDetail" placeholder="Ej: Servicios Profesionales de IT" value="Servicios de IT">
+      </div>
+      <div class="form-group">
+        <label>Importe Total ($)</label>
+        <input type="number" id="invTotal" placeholder="Ej: 50000" value="25000">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('invoiceModal')">Cancelar</button>
+        <button class="btn-primary" id="btnEmitir" onclick="simulateInvoice()" style="flex:1; justify-content:center;">Autorizar en ARCA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NUEVO CLIENTE -->
+  <div class="modal-overlay" id="clientModal">
+    <div class="modal-box">
+      <h3 class="modal-title"><span>👥</span> Agregar Cliente</h3>
+      <div class="form-group">
+        <label>Razón Social / Nombre Completo</label>
+        <input type="text" id="cliName" placeholder="Ej: Empresa SRL">
+      </div>
+      <div class="form-group">
+        <label>CUIT / DNI</label>
+        <input type="tel" id="cliCuit" placeholder="Ej: 30-12345678-9">
+      </div>
+      <div class="form-group">
+        <label>Condición frente al IVA</label>
+        <select id="cliIva">
+          <option>Consumidor Final</option>
+          <option>Responsable Inscripto</option>
+          <option>Monotributista</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Email de Contacto</label>
+        <input type="email" id="cliEmail" placeholder="Ej: contacto@empresa.com">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('clientModal')">Cancelar</button>
+        <button class="btn-primary" onclick="addClient()" style="flex:1; justify-content:center;">Guardar Cliente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MOVIMIENTO CUENTA -->
+  <div class="modal-overlay" id="cuentaModal">
+    <div class="modal-box">
+      <h3 class="modal-title"><span>💰</span> Registrar Movimiento</h3>
+      <div class="form-group">
+        <label>Cliente</label>
+        <select id="movClientSelect"></select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de Movimiento</label>
+        <select id="movType">
+          <option value="deuda">Generar Deuda (Fiado / Factura Impaga)</option>
+          <option value="pago">Registrar Pago (Abono en Efectivo/Transf)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Importe ($)</label>
+        <input type="number" id="movTotal" placeholder="Ej: 10000">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('cuentaModal')">Cancelar</button>
+        <button class="btn-primary" onclick="addMovement()" style="flex:1; justify-content:center;">Registrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- STATE ---
+    let clients = [
+      { id: 1, name: "Consumidor Final", cuit: "99-99999999-9", iva: "Consumidor Final", email: "-" },
+      { id: 2, name: "Tech Solutions SRL", cuit: "30-12345678-9", iva: "Responsable Inscripto", email: "pagos@tech.com" },
+      { id: 3, name: "Juan Pérez", cuit: "20-87654321-1", iva: "Monotributista", email: "juanp@gmail.com" }
+    ];
+    
+    let invoices = [
+      { id: "FC-0001-00000142", date: "24/07/2026", client: "Consumidor Final", total: 15000 },
+      { id: "FA-0001-00000045", date: "24/07/2026", client: "Tech Solutions SRL", total: 150000 },
+      { id: "FC-0001-00000141", date: "23/07/2026", client: "Juan Pérez", total: 8500 }
+    ];
+
+    let accounts = [
+      { clientId: 2, lastMove: "24/07/2026", type: "Deuda Factura", balance: 30000 },
+      { clientId: 3, lastMove: "22/07/2026", type: "Pago Parcial", balance: 4500 }
+    ];
+
+    // --- NAVIGATION & UI ---
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('open');
+    }
+
+    function switchView(viewId, navEl) {
+      document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      navEl.classList.add('active');
+      if (window.innerWidth <= 768) toggleSidebar();
+    }
+
+    function openModal(id) {
+      if(id === 'invoiceModal' || id === 'cuentaModal') populateClientDropdowns();
+      document.getElementById(id).classList.add('show');
+    }
+    
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    // --- RENDERERS ---
+    function renderClients() {
+      const tbody = document.getElementById('clientsTableBody');
+      tbody.innerHTML = clients.map(c => `
+        <tr>
+          <td style="font-weight:700;">${c.name}</td>
+          <td>${c.cuit}</td>
+          <td><span class="badge ${c.iva.includes('Inscripto') ? 'badge-warning' : 'badge-success'}">${c.iva}</span></td>
+          <td>${c.email}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderInvoices() {
+      const tbody = document.getElementById('invoiceTableBody');
+      tbody.innerHTML = invoices.map(inv => `
+        <tr>
+          <td style="font-weight:700;">${inv.id}</td>
+          <td>${inv.date}</td>
+          <td>${inv.client}</td>
+          <td style="font-weight:700;">$ ${inv.total.toLocaleString('es-AR')}</td>
+          <td><span class="badge badge-success">Aprobado</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAccounts() {
+      const tbody = document.getElementById('cuentasTableBody');
+      let totalDebt = 0;
+      
+      tbody.innerHTML = accounts.map(acc => {
+        const client = clients.find(c => c.id == acc.clientId);
+        totalDebt += acc.balance;
+        return `
+          <tr>
+            <td style="font-weight:700;">${client ? client.name : 'Desc'}</td>
+            <td>${acc.lastMove}</td>
+            <td>${acc.type}</td>
+            <td style="font-weight:700; color: var(--danger)">$ ${acc.balance.toLocaleString('es-AR')}</td>
+          </tr>
+        `;
+      }).join('');
+      
+      document.getElementById('dashDeuda').innerText = `$${totalDebt.toLocaleString('es-AR')}`;
+    }
+
+    function populateClientDropdowns() {
+      const opts = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      document.getElementById('invClientSelect').innerHTML = opts;
+      document.getElementById('movClientSelect').innerHTML = opts;
+    }
+
+    // --- ACTIONS ---
+    function addClient() {
+      const name = document.getElementById('cliName').value;
+      const cuit = document.getElementById('cliCuit').value;
+      const iva = document.getElementById('cliIva').value;
+      const email = document.getElementById('cliEmail').value;
+      
+      if(!name) return alert('El nombre es requerido');
+      
+      clients.push({ id: Date.now(), name, cuit, iva, email });
+      renderClients();
+      closeModal('clientModal');
+      
+      // Clear form
+      document.getElementById('cliName').value = '';
+      document.getElementById('cliCuit').value = '';
+      document.getElementById('cliEmail').value = '';
+    }
+
+    function simulateInvoice() {
+      const btn = document.getElementById('btnEmitir');
+      const clientId = document.getElementById('invClientSelect').value;
+      const totalStr = document.getElementById('invTotal').value;
+      const clientObj = clients.find(c => c.id == clientId);
+      
+      if(!totalStr) return alert("Ingrese un importe");
+      const total = parseFloat(totalStr);
+
+      const originalText = btn.textContent;
+      btn.textContent = "Validando con ARCA...";
+      btn.style.opacity = "0.7";
+      btn.style.pointerEvents = "none";
+      
+      setTimeout(() => {
+        btn.textContent = "¡CAE Aprobado!";
+        btn.style.background = "var(--success)";
+        
+        setTimeout(() => {
+          closeModal('invoiceModal');
+          btn.textContent = originalText;
+          btn.style.opacity = "1";
+          btn.style.pointerEvents = "auto";
+          btn.style.background = ""; 
+          
+          invoices.unshift({
+            id: `FC-0001-00000${Math.floor(Math.random()*900)+100}`,
+            date: new Date().toLocaleDateString('es-AR'),
+            client: clientObj ? clientObj.name : 'Generado',
+            total: total
+          });
+          
+          renderInvoices();
+          
+          // Update Dash
+          document.getElementById('dashTotalMonto').innerText = `$ ${(2450000 + total).toLocaleString('es-AR')}`;
+          document.getElementById('dashTotalFacturas').innerText = invoices.length + 139;
+          
+        }, 1200);
+      }, 1500);
+    }
+
+    function addMovement() {
+      const clientId = document.getElementById('movClientSelect').value;
+      const type = document.getElementById('movType').value; // deuda o pago
+      const amountStr = document.getElementById('movTotal').value;
+      
+      if(!amountStr) return alert("Ingrese un importe");
+      const amount = parseFloat(amountStr);
+      
+      let acc = accounts.find(a => a.clientId == clientId);
+      
+      if(!acc) {
+        acc = { clientId: clientId, lastMove: new Date().toLocaleDateString('es-AR'), type: '', balance: 0 };
+        accounts.push(acc);
+      }
+      
+      acc.lastMove = new Date().toLocaleDateString('es-AR');
+      
+      if(type === 'deuda') {
+        acc.balance += amount;
+        acc.type = 'Nueva Deuda';
+      } else {
+        acc.balance -= amount;
+        acc.type = 'Pago Registrado';
+        if(acc.balance < 0) acc.balance = 0; // Evitar saldo negativo para la demo
+      }
+      
+      renderAccounts();
+      closeModal('cuentaModal');
+      document.getElementById('movTotal').value = '';
+    }
+
+    // Init
+    renderClients();
+    renderInvoices();
+    renderAccounts();
+  </script>
+</body>
+</html>

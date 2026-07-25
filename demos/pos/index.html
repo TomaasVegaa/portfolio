@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kiosco POS Premium Demo</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #06b6d4;
+      --primary-hover: #0891b2;
+      --success: #10b981;
+      --border: #334155;
+      --danger: #ef4444;
+    }
+    
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Layout */
+    .app-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; max-width: 600px; margin: 0 auto; width: 100%; box-shadow: 0 0 30px rgba(0,0,0,0.2); }
+    
+    /* Header */
+    .header { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); padding: 1rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.75rem; z-index: 10; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; }
+    .header-top h1 { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; }
+    .user-profile { background: rgba(255,255,255,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .search-bar { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.6); color: var(--text); outline: none; font-size: 0.95rem; }
+    
+    /* Main Content */
+    .main-content { flex: 1; overflow-y: auto; padding: 1rem; padding-bottom: 90px; }
+    
+    /* View Switcher */
+    .view-content { display: none; }
+    .view-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    /* Products Grid */
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    @media (min-width: 400px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
+    
+    .product-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; cursor: pointer; transition: transform 0.1s, border-color 0.2s; user-select: none; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .product-card:active { transform: scale(0.95); border-color: var(--primary); }
+    .product-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .product-name { font-size: 0.85rem; font-weight: 500; text-align: center; margin-bottom: 0.5rem; color: #e2e8f0; }
+    .product-price { font-size: 1.1rem; color: var(--primary); font-weight: 700; }
+    
+    /* Fiado (Cuentas Corrientes) */
+    .fiado-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .fiado-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .fiado-info h3 { margin: 0 0 0.25rem 0; font-size: 1rem; }
+    .fiado-info p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
+    .fiado-amount { font-size: 1.1rem; font-weight: bold; color: var(--danger); }
+    .btn-pay-fiado { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-top: 0.5rem; cursor: pointer; }
+    
+    /* Bottom Navigation */
+    .bottom-nav { background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 0.5rem 0; padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); position: absolute; bottom: 0; width: 100%; z-index: 20; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 500; cursor: pointer; position: relative; width: 60px; }
+    .nav-item.active { color: var(--primary); }
+    .nav-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .badge { position: absolute; top: -5px; right: 5px; background: var(--danger); color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold; opacity: 0; transition: opacity 0.2s; }
+    .badge.visible { opacity: 1; }
+    
+    /* Sliding Cart (BottomSheet) */
+    .cart-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 30; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .cart-overlay.open { opacity: 1; pointer-events: auto; }
+    
+    .cart-sheet { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: var(--bg); border-radius: 20px 20px 0 0; z-index: 40; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: 0 -5px 25px rgba(0,0,0,0.5); }
+    .cart-sheet.open { transform: translateY(0); }
+    
+    .cart-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .cart-header h2 { margin: 0; font-size: 1.25rem; }
+    .close-cart { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+    
+    .cart-items { flex: 1; overflow-y: auto; padding: 1rem; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px dashed var(--border); }
+    .item-info { display: flex; flex-direction: column; gap: 0.25rem; }
+    .item-qty { font-size: 0.85rem; color: var(--primary); font-weight: 600; }
+    .item-price { font-weight: 700; font-size: 1.1rem; }
+    
+    .cart-footer { padding: 1.5rem; background: var(--card); border-top: 1px solid var(--border); padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+    .total-row { display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 800; margin-bottom: 1.5rem; }
+    .btn-pay { width: 100%; padding: 1.1rem; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--success), #059669); color: #fff; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+    
+    /* Toast */
+    .toast { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 1rem 2rem; border-radius: 30px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4); }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="header">
+      <div class="header-top">
+        <h1>🛒 KiSoCo POS</h1>
+        <div class="user-profile">Caja 1</div>
+      </div>
+      <input type="text" class="search-bar" placeholder="🔍 Buscar código o producto...">
+    </div>
+    
+    <div class="main-content">
+      <!-- Venta View -->
+      <div class="view-content active" id="view-venta">
+        <div class="products-grid" id="productsGrid">
+          <!-- Generado por JS -->
+        </div>
+      </div>
+      
+      <!-- Fiado View -->
+      <div class="view-content" id="view-fiado">
+        <h2 style="margin-top:0; margin-bottom:1rem; font-size: 1.1rem;">Cuentas Corrientes (Fiado)</h2>
+        <div class="fiado-list">
+          <div class="fiado-card">
+            <div class="fiado-info">
+              <h3>Juan Pérez</h3>
+              <p>Última compra: Hoy 10:30hs</p>
+              <button class="btn-pay-fiado" onclick="showToast('Saldo abonado con éxito')">Saldar Cuenta</button>
+            </div>
+            <div class="fiado-amount">-$4,500.00</div>
+          </div>
+          <div class="fiado-card">
+            <div class="fiado-info">
+              <h3>María López</h3>
+              <p>Última compra: Ayer</p>
+              <button class="btn-pay-fiado" onclick="showToast('Saldo abonado con éxito')">Saldar Cuenta</button>
+            </div>
+            <div class="fiado-amount">-$12,800.00</div>
+          </div>
+          <div class="fiado-card">
+            <div class="fiado-info">
+              <h3>Carlos Mecánico</h3>
+              <p>Última compra: Hace 3 días</p>
+              <button class="btn-pay-fiado" onclick="showToast('Saldo abonado con éxito')">Saldar Cuenta</button>
+            </div>
+            <div class="fiado-amount">-$1,250.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="switchView('venta', this)">
+        <div class="nav-icon">🏪</div>
+        <span>Venta</span>
+      </div>
+      <div class="nav-item" onclick="switchView('fiado', this)">
+        <div class="nav-icon">📓</div>
+        <span>Fiado</span>
+      </div>
+      <div class="nav-item" onclick="openCart()">
+        <div class="nav-icon">🧾</div>
+        <span>Ticket</span>
+        <div class="badge" id="cartBadge">0</div>
+      </div>
+    </div>
+    
+    <!-- Cart BottomSheet -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <div class="cart-sheet" id="cartSheet">
+      <div class="cart-header">
+        <h2>Ticket de Venta</h2>
+        <button class="close-cart" onclick="closeCart()">×</button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <div style="color: var(--text-muted); text-align: center; margin-top: 3rem;">El ticket está vacío</div>
+      </div>
+      <div class="cart-footer">
+        <div class="total-row">
+          <span>Total</span>
+          <span id="cartTotalText">$0.00</span>
+        </div>
+        <button class="btn-pay" onclick="processPayment()">💵 Cobrar en Efectivo</button>
+      </div>
+    </div>
+    
+    <div class="toast" id="toast">Cobro realizado con éxito ✅</div>
+  </div>
+
+  <script>
+    const products = [
+      { id: 1, name: "Coca Cola 2.25L", price: 2500, icon: "🥤" },
+      { id: 2, name: "Cerveza Lata 473ml", price: 1200, icon: "🍺" },
+      { id: 3, name: "Papas Lays", price: 1800, icon: "🥔" },
+      { id: 4, name: "Alfajor Chocolate", price: 800, icon: "🍫" },
+      { id: 5, name: "Galletas Oreo", price: 1100, icon: "🍪" },
+      { id: 6, name: "Agua Mineral 1L", price: 900, icon: "💧" },
+      { id: 7, name: "Yerba Mate 500g", price: 2200, icon: "🧉" },
+      { id: 8, name: "Pan Sándwich", price: 1500, icon: "🍞" },
+    ];
+
+    let cart = [];
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = products.map(p => `
+        <div class="product-card" onclick="addToCart(${p.id})">
+          <div class="product-icon">${p.icon}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-price">$${p.price.toFixed(2)}</div>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      updateCartUI();
+      
+      // Feedback visual
+      const badge = document.getElementById('cartBadge');
+      badge.style.transform = 'scale(1.3)';
+      setTimeout(() => badge.style.transform = 'scale(1)', 150);
+    }
+
+    function updateCartUI() {
+      const badge = document.getElementById('cartBadge');
+      const itemsContainer = document.getElementById('cartItems');
+      const totalText = document.getElementById('cartTotalText');
+      
+      const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+      
+      if (totalQty > 0) {
+        badge.textContent = totalQty;
+        badge.classList.add('visible');
+      } else {
+        badge.classList.remove('visible');
+      }
+
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = `<div style="color: var(--text-muted); text-align: center; margin-top: 3rem;">El ticket está vacío</div>`;
+        totalText.textContent = "$0.00";
+        return;
+      }
+
+      itemsContainer.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div class="item-info">
+            <span style="font-weight:600; font-size:1rem;">${item.name}</span>
+            <span class="item-qty">${item.qty} un. x $${item.price.toFixed(2)}</span>
+          </div>
+          <span class="item-price">$${(item.price * item.qty).toFixed(2)}</span>
+        </div>
+      `).join('');
+
+      const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+      totalText.textContent = `$${total.toFixed(2)}`;
+    }
+    
+    function switchView(viewId, navEl) {
+      document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
+      
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      navEl.classList.add('active');
+    }
+
+    function openCart() {
+      document.getElementById('cartOverlay').classList.add('open');
+      document.getElementById('cartSheet').classList.add('open');
+    }
+    
+    function closeCart() {
+      document.getElementById('cartOverlay').classList.remove('open');
+      document.getElementById('cartSheet').classList.remove('open');
+    }
+
+    function processPayment() {
+      if (cart.length === 0) return;
+      
+      showToast('Cobro realizado con éxito ✅');
+      
+      cart = [];
+      updateCartUI();
+      closeCart();
+    }
+    
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>

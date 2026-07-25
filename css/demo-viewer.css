@@ -1,0 +1,115 @@
+/* DEMO VIEWER OVERLAY */
+.demo-viewer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-dark);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.demo-viewer-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.demo-viewer-header {
+  height: 60px;
+  background: var(--bg-dark-depth);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  flex-shrink: 0;
+}
+
+.demo-viewer-title {
+  display: flex;
+  align-items: center;
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.demo-close-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.demo-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.demo-viewer-body {
+  flex-grow: 1;
+  position: relative;
+  background: #000;
+}
+
+.demo-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.demo-iframe.loaded {
+  opacity: 1;
+}
+
+.demo-loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(6, 182, 212, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--accent-cyan);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Features List */
+.project-features-list ul li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.project-features-list ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent-emerald);
+  font-weight: bold;
+}

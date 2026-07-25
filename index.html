@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevStudio | Desarrollador de Sistemas Hechos a Medida</title>
+  <meta name="description" content="Portfolio profesional de Desarrollador Fullstack especializado en Sistemas de Gestión a Medida, TPV/POS Gastronómico y Comercial, Facturación Electrónica ARCA/AFIP y Plataformas E-commerce.">
+  <meta name="keywords" content="Desarrollador de Software, Sistemas a Medida, Fullstack Developer, PHP, MySQL, JavaScript, POS, TPV, ARCA, AFIP, PWA, E-commerce">
+  <meta name="author" content="DevStudio Software">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="DevStudio | Desarrollador de Sistemas Hechos a Medida">
+  <meta property="og:description" content="Sistemas de Gestión, TPV Gastronómico, Facturación ARCA/AFIP y E-commerce 100% personalizados sin pago de licencias abusivas.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/demo-viewer.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- NAVBAR STICKY / GLASSMORPHIC -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <a href="#inicio" class="logo">
+          <span>DevStudio</span>
+          <span class="logo-badge" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));">Custom Software</span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+          <li><a href="#sobre-mi" class="nav-link">About &amp; Stack</a></li>
+          <li><a href="#proyectos" class="nav-link">Sistemas</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+          <li>
+            <a href="#contacto" class="btn btn-primary btn-sm" style="padding: 0.55rem 1.2rem; font-size: 0.85rem; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-dark)); box-shadow: var(--shadow-cyan);">
+              Solicitar Cotización
+            </a>
+          </li>
+        </ul>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO SECTION - DEVELOPER SPECS -->
+  <section id="inicio" class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Text Column -->
+        <div class="hero-content reveal">
+
+          <h1 class="hero-title text-gradient">
+            Sistemas de Gestión y Software <span class="text-gradient-emerald" style="background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">a la Medida</span> de tu Negocio
+          </h1>
+
+          <p class="hero-subtitle">
+            Hago software a medida que realmente funciona. Sin licencias mensuales carísimas ni sistemas genéricos. Desarrollo Puntos de Venta (POS), Facturación y E-commerce fáciles de usar para potenciar tu negocio.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="#proyectos" class="btn btn-primary" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-dark)); box-shadow: var(--shadow-cyan);">
+              <span>Ver Sistemas Desarrollados</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            <a href="#contacto" class="btn btn-secondary">
+              <span>Cotizar mi Sistema</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Interactive Laptop Mockup Column -->
+        <div class="hero-video-container reveal">
+          <div class="laptop-mockup">
+            <div class="laptop-screen">
+              <div class="laptop-camera"></div>
+              <div class="laptop-display">
+                <img src="assets/images/estudio_proyecto.jpeg" alt="Sistema Contable ARCA" class="laptop-slide active">
+                <img src="assets/images/laspiedritas.jpeg" alt="TPV Las Piedritas" class="laptop-slide">
+                <img src="assets/images/kisoco.jpeg" alt="Kiosco POS Dashboard" class="laptop-slide">
+                <img src="assets/images/metalmim.jpeg" alt="Catálogo Metalmim" class="laptop-slide">
+                <img src="assets/images/queempa.jpeg" alt="App Pedidos Queempa" class="laptop-slide">
+              </div>
+            </div>
+            <div class="laptop-base">
+              <div class="laptop-trackpad"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP / OPERATIONAL METRICS -->
+  <section class="trust-strip">
+    <div class="container">
+      <div class="trust-grid reveal">
+        <div class="trust-item">
+          <h4 class="text-gradient-emerald" style="background: linear-gradient(135deg, #22d3ee, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">5+ Sistemas</h4>
+          <p>Soluciones Complejas en Producción</p>
+        </div>
+        <div class="trust-item">
+          <h4 class="text-gradient-blue" style="background: linear-gradient(135deg, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ARCA / AFIP</h4>
+          <p>Integración Nativa de Facturación</p>
+        </div>
+        <div class="trust-item">
+          <h4 class="text-gradient-gold">TPV &amp; PWA</h4>
+          <p>Interfaces Touch &amp; Offline Ready</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT & STACK SECTION (Diseño Combinado con Bordes Neón estilo Referencia) -->
+  <section id="sobre-mi" class="section about-stack-section">
+    <div class="container">
+      <h2 class="about-header-title">About<span style="color: #ff416c;">.</span></h2>
+
+      <div class="about-stack-grid reveal">
+        <!-- Left: Bio Card -->
+        <div class="about-bio-card">
+          <div class="about-avatar-glow">
+            <img src="assets/images/profile.jpg" alt="Tomás Vega - Desarrollador Fullstack" class="about-profile-img">
+          </div>
+          <p class="about-bio-text">
+            Desarrollador Fullstack enfocado en el diseño de software a medida, sistemas POS/TPV, facturación electrónica e e-commerce. Apasionado por crear soluciones limpias, veloces y directas que potencian la operativa de negocios reales sin licencias costosas.
+          </p>
+        </div>
+
+        <!-- Right: Neon Tech Stack Cards -->
+        <div class="stack-grid-container">
+          <div class="stack-card stack-card-js">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f7df1e" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"></rect><path d="M16 16v-4a2 2 0 0 0-4 0v4M12 14a2 2 0 1 0-4 0v2"></path></svg>
+            <span class="stack-card-name">JavaScript</span>
+          </div>
+
+          <div class="stack-card stack-card-php">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#777bb4" stroke-width="2"><path d="M4 12h16M4 6h16M4 18h16"></path></svg>
+            <span class="stack-card-name">PHP 8</span>
+          </div>
+
+          <div class="stack-card stack-card-html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#e34f26" stroke-width="2"><path d="M4 3l1.8 17 6.2 2 6.2-2L20 3H4z"></path></svg>
+            <span class="stack-card-name">HTML5</span>
+          </div>
+
+          <div class="stack-card stack-card-css">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1572b6" stroke-width="2"><path d="M4 3l1.8 17 6.2 2 6.2-2L20 3H4z"></path></svg>
+            <span class="stack-card-name">CSS3</span>
+          </div>
+
+          <div class="stack-card stack-card-mysql">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            <span class="stack-card-name">MySQL</span>
+          </div>
+
+          <div class="stack-card stack-card-pwa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+            <span class="stack-card-name">PWA</span>
+          </div>
+
+          <div class="stack-card stack-card-arca">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <span class="stack-card-name">ARCA/AFIP</span>
+          </div>
+
+          <div class="stack-card stack-card-git">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f05032" stroke-width="2"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="6" y1="9" x2="6" y2="15"></line><path d="M18 15V9a3 3 0 0 0-3-3H9"></path></svg>
+            <span class="stack-card-name">Git</span>
+          </div>
+
+          <div class="stack-card stack-card-node">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            <span class="stack-card-name">REST APIs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERÍA DE SISTEMAS & PROYECTOS (FOTOS & VIDEOS REALES) -->
+  <section id="proyectos" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge badge-emerald" style="background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);">Fotos &amp; Video Demos</span>
+        <h2>Sistemas Desarrollados &amp; Casos de Éxito</h2>
+        <p>Explora la galería multimedia interactiva y los videos demostrativos de cada sistema.</p>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs reveal">
+        <button class="filter-btn js-filter-btn active" data-filter="all">Todos los Sistemas</button>
+        <button class="filter-btn js-filter-btn" data-filter="facturacion">Facturación &amp; ARCA</button>
+        <button class="filter-btn js-filter-btn" data-filter="pos">TPV / POS</button>
+        <button class="filter-btn js-filter-btn" data-filter="ecommerce">E-commerce &amp; Web</button>
+      </div>
+
+      <!-- Project Cards Grid -->
+      <div class="grid grid-2" id="projectsGrid">
+        <!-- Project Card 1: estudio-arca -->
+        <article class="project-card js-project-card reveal" data-category="facturacion">
+          <div class="project-thumb">
+            <img src="assets/images/estudio_proyecto.jpeg" alt="Gestor Contable ARCA AFIP" loading="lazy">
+            <span class="badge badge-emerald project-category-badge">Facturación ARCA</span>
+          </div>
+          <div class="project-body">
+            <span class="card-media-count-badge">📸 3 Capturas Interactivas</span>
+            <h3 class="project-title">Gestor Contable &amp; Facturación ARCA / AFIP</h3>
+            <p class="project-snippet">
+              Sistema integral de emisión de comprobantes fiscales A, B y C conectado a la API de ARCA, con gestión de cuentas corrientes e impresión de facturas en PDF.
+            </p>
+            <div class="project-tags">
+              <span class="tag">PHP 8</span>
+              <span class="tag">API ARCA/AFIP</span>
+              <span class="tag">Cuentas Corrientes</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary project-footer-btn js-open-case-study" data-project-id="estudio-arca" style="flex: 1;">
+                  <span>Detalles</span>
+                </button>
+                <button class="btn btn-primary js-open-demo-direct" data-project-id="estudio-arca" style="flex: 1; padding: 0.6rem 1rem; font-size: 0.85rem;">
+                  <span>Probar Demo</span>
+                </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project Card 2: las-piedritas-pos -->
+        <article class="project-card js-project-card reveal" data-category="pos">
+          <div class="project-thumb">
+            <img src="assets/images/laspiedritas.jpeg" alt="Las Piedritas POS Gastronómico" loading="lazy">
+            <span class="badge badge-emerald project-category-badge" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);">TPV Gastronómico</span>
+          </div>
+          <div class="project-body">
+            <span class="card-media-count-badge">📸 4 Fotos • 🎥 7 Videos Demos</span>
+            <h3 class="project-title">Las Piedritas - TPV Gastronómico &amp; PWA</h3>
+            <p class="project-snippet">
+              Sistema POS para salones de comida, control interactivo de mesas, comandas a cocina, arqueo de caja por turnos y PWA instalable para mozos.
+            </p>
+            <div class="project-tags">
+              <span class="tag">POS Touch</span>
+              <span class="tag">PWA</span>
+              <span class="tag">Control de Mesas</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary project-footer-btn js-open-case-study" data-project-id="las-piedritas-pos" style="flex: 1;">
+                  <span>Detalles</span>
+                </button>
+                <button class="btn btn-primary js-open-demo-direct" data-project-id="las-piedritas-pos" style="flex: 1; padding: 0.6rem 1rem; font-size: 0.85rem;">
+                  <span>Probar Demo</span>
+                </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project Card 3: queempa-delivery -->
+        <article class="project-card js-project-card reveal" data-category="ecommerce">
+          <div class="project-thumb">
+            <img src="assets/images/queempa.jpeg" alt="QUEEMPA App de Pedidos" loading="lazy">
+            <span class="badge badge-gold project-category-badge">E-commerce &amp; WhatsApp</span>
+          </div>
+          <div class="project-body">
+            <span class="card-media-count-badge">📸 3 Fotos • 🎥 2 Videos Demos</span>
+            <h3 class="project-title">QUEEMPA - App de Pedidos estilo PedidosYa</h3>
+            <p class="project-snippet">
+              Web app interactiva estilo PedidosYa con selección personalizada de opciones de platos, carrito flotante en tiempo real y checkout directo por WhatsApp.
+            </p>
+            <div class="project-tags">
+              <span class="tag">Vanilla JS</span>
+              <span class="tag">PedidosYa Style</span>
+              <span class="tag">WhatsApp Checkout</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary project-footer-btn js-open-case-study" data-project-id="queempa-delivery" style="flex: 1;">
+                  <span>Detalles</span>
+                </button>
+                <button class="btn btn-primary js-open-demo-direct" data-project-id="queempa-delivery" style="flex: 1; padding: 0.6rem 1rem; font-size: 0.85rem;">
+                  <span>Probar Demo</span>
+                </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project Card 4: metalmim-industrial -->
+        <article class="project-card js-project-card reveal" data-category="ecommerce">
+          <div class="project-thumb">
+            <img src="assets/images/metalmim1.jpeg" alt="Metalmim Catálogo Industrial" loading="lazy">
+            <span class="badge badge-blue project-category-badge" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-violet); border-color: rgba(139, 92, 246, 0.3);">Sitio Activo</span>
+          </div>
+          <div class="project-body">
+            <span class="card-media-count-badge">🌐 Sitio Web Activo en Vivo</span>
+            <h3 class="project-title">Metalmim - Catálogo Industrial &amp; Cotizador</h3>
+            <p class="project-snippet">
+              Plataforma de exhibición de productos metalúrgicos con gestor CMS de contenidos a medida, fichas técnicas y cotizaciones en línea.
+            </p>
+            <div class="project-tags">
+              <span class="tag">PHP/MySQL</span>
+              <span class="tag">CMS Custom</span>
+              <span class="tag">Web Activa</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary project-footer-btn js-open-case-study" data-project-id="metalmim-industrial">
+                <span>Ver Detalles</span>
+              </button>
+              <a href="https://metalmim.is-great.net/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 0.6rem 1rem; font-size: 0.85rem; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-dark));">
+                <span>Visitar Web</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project Card 5: kiosco-pos -->
+        <article class="project-card js-project-card reveal" data-category="pos">
+          <div class="project-thumb">
+            <img src="assets/images/kisoco.jpeg" alt="Kiosco POS Cuentas Corrientes" loading="lazy">
+            <span class="badge badge-emerald project-category-badge" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);">POS Comercio</span>
+          </div>
+          <div class="project-body">
+            <span class="card-media-count-badge">📸 5 Fotos • 🎥 1 Video Demo</span>
+            <h3 class="project-title">Kiosco POS &amp; Cuentas Corrientes</h3>
+            <p class="project-snippet">
+              Punto de venta comercial para minimarkets con módulo especializado de fiado (cuentas corrientes de clientes), stock en tiempo real y reportes.
+            </p>
+            <div class="project-tags">
+              <span class="tag">POS Kiosco</span>
+              <span class="tag">Cuentas Corrientes</span>
+              <span class="tag">Stock</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary project-footer-btn js-open-case-study" data-project-id="kiosco-pos" style="flex: 1;">
+                  <span>Detalles</span>
+                </button>
+                <button class="btn btn-primary js-open-demo-direct" data-project-id="kiosco-pos" style="flex: 1; padding: 0.6rem 1rem; font-size: 0.85rem;">
+                  <span>Probar Demo</span>
+                </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN CONTACTO DIRECTO -->
+  <section id="contacto" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge badge-emerald" style="background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);">Contacto &amp; Presupuestos</span>
+        <h2>¿Necesitas un Sistema a Medida para tu Empresa?</h2>
+        <p>Cuéntame sobre tu proyecto y desarrollemos una solución de software adaptada a tus necesidades reales.</p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Direct Quick Action Links -->
+        <div class="contact-info reveal">
+          <!-- WhatsApp Direct -->
+          <a href="https://wa.me/5493816604958?text=Hola,%20me%20interesa%20cotizar%20un%20sistema%20de%20software%20a%20medida." target="_blank" rel="noopener noreferrer" class="contact-card-direct whatsapp">
+            <div class="contact-direct-icon" style="background: rgba(37, 211, 102, 0.12); color: #25d366;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </div>
+            <div class="contact-direct-text">
+              <h4>WhatsApp Directo</h4>
+              <p>Respuesta inmediata para cotizaciones</p>
+            </div>
+          </a>
+
+          <!-- Email Direct -->
+          <a href="mailto:tomasvalentinvega51@gmail.com" class="contact-card-direct">
+            <div class="contact-direct-icon" style="background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+            <div class="contact-direct-text">
+              <h4>Correo Profesional</h4>
+              <p>Contacto corporativo y proyectos</p>
+            </div>
+          </a>
+          
+          <!-- GitHub Direct -->
+          <a href="https://github.com/TomaasVegaa" target="_blank" rel="noopener noreferrer" class="contact-card-direct github">
+            <div class="contact-direct-icon" style="background: rgba(255, 255, 255, 0.12); color: #fff;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </div>
+            <div class="contact-direct-text">
+              <h4>Mi Repositorio GitHub</h4>
+              <p>Código fuente y más proyectos</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Lightweight Contact Form -->
+        <div class="contact-form-container reveal">
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="contactName" class="form-label">Nombre o Empresa</label>
+              <input type="text" id="contactName" class="form-input" placeholder="Ej. Comercio o Nombre" required>
+            </div>
+
+            <div class="form-group">
+              <label for="contactEmail" class="form-label">Correo Electrónico o WhatsApp</label>
+              <input type="text" id="contactEmail" class="form-input" placeholder="Tu email o teléfono de contacto" required>
+            </div>
+
+            <div class="form-group">
+              <label for="contactMessage" class="form-label">Tipo de Sistema Requerido</label>
+              <textarea id="contactMessage" class="form-textarea" placeholder="Describe brevemente qué necesita tu negocio (ej. TPV Gastronómico, Facturación ARCA, Sistema de Kiosco, E-commerce)..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-dark)); box-shadow: var(--shadow-cyan);">
+              <span>Solicitar Presupuesto</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+
+            <div id="formStatus" class="form-status"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <a href="#inicio" class="logo">
+          <span>DevStudio</span>
+          <span class="logo-badge" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));">Custom Software</span>
+        </a>
+
+        <p class="footer-copy">
+          © 2026 DevStudio. Desarrollador de Sistemas Hechos a Medida • Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL INTERACTIVO CON GALERÍA MULTIMEDIA Y REPRODUCTOR DE VIDEO -->
+  <div class="modal-backdrop" id="caseStudyModal">
+    <div class="modal-container">
+      <button class="modal-close-btn" id="closeModalBtn" aria-label="Cerrar modal">&times;</button>
+      
+      <div class="modal-header">
+        <span class="badge badge-emerald" id="modalCategory">Sistema a Medida</span>
+        <h2 class="modal-title" id="modalTitle">Nombre del Sistema</h2>
+        <p class="modal-subtitle" id="modalSubtitle">Subtítulo de arquitectura del sistema</p>
+      </div>
+
+      <div class="modal-body">
+        <!-- Interactive Media Showcase Box (Images + Video Player) -->
+        <div class="modal-media-showcase" id="modalMediaShowcase">
+          <!-- Dinámico via JS -->
+        </div>
+
+        <!-- Mobile-First Thumbnail Carousel Strip -->
+        <div class="modal-media-carousel" id="modalMediaCarousel">
+          <!-- Dinámico via JS -->
+        </div>
+
+        <!-- Key Features List -->
+        <div class="project-features-list">
+          <h4 style="margin-bottom: 1rem; color: var(--accent-emerald);">Características Principales</h4>
+          <ul id="projectFeaturesList" style="list-style-type: none; padding: 0;">
+            <!-- Dinámico via JS -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">DevStudio • Galería &amp; Caso de Estudio</span>
+        <a href="#contacto" id="modalDemoLink" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-cyan-dark));">
+          <span>Solicitar Demo / Cotización</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMO VIEWER OVERLAY -->
+  <div class="demo-viewer-overlay" id="demoViewerOverlay">
+    <div class="demo-viewer-header">
+      <div class="demo-viewer-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <span id="demoViewerTitle">Demo Interactiva</span>
+      </div>
+      <button class="demo-close-btn" id="demoCloseBtn" aria-label="Cerrar Demo">&times; Cerrar Demo</button>
+    </div>
+    <div class="demo-viewer-body">
+      <div class="demo-loading-spinner" id="demoLoadingSpinner">
+        <div class="spinner"></div>
+      </div>
+      <iframe src="" id="demoIframe" class="demo-iframe" title="Interactive Demo Viewer"></iframe>
+    </div>
+  </div>
+
+  <!-- JavaScript Entry Point (ES6 Modules) -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

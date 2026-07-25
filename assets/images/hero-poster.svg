@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0b1120"/>
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Grid Lines -->
+  <path d="M0 100 H800 M0 200 H800 M0 300 H800 M0 400 H800" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <path d="M200 0 V500 M400 0 V500 M600 0 V500" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+  <!-- Speaker Avatar Graphic Circle -->
+  <circle cx="400" cy="210" r="85" fill="#1e293b" stroke="url(#emeraldGrad)" stroke-width="4"/>
+  <path d="M400 165 C380 165 365 180 365 200 C365 220 380 235 400 235 C420 235 435 220 435 200 C435 180 420 165 400 165 Z" fill="#94a3b8"/>
+  <path d="M340 275 C340 245 365 240 400 240 C435 240 460 245 460 275 Z" fill="#94a3b8"/>
+
+  <!-- Overlay Video Controls Simulation -->
+  <rect x="180" y="360" width="440" height="60" rx="14" fill="rgba(15, 23, 42, 0.85)" stroke="rgba(255,255,255,0.1)" backdrop-filter="blur(10px)"/>
+  
+  <!-- Sound Waveform -->
+  <rect x="220" y="385" width="4" height="10" rx="2" fill="#10b981"/>
+  <rect x="230" y="375" width="4" height="30" rx="2" fill="#10b981"/>
+  <rect x="240" y="380" width="4" height="20" rx="2" fill="#10b981"/>
+  <rect x="250" y="370" width="4" height="40" rx="2" fill="#3b82f6"/>
+  <rect x="260" y="382" width="4" height="16" rx="2" fill="#3b82f6"/>
+  <rect x="270" y="376" width="4" height="28" rx="2" fill="#10b981"/>
+
+  <text x="300" y="396" fill="#f8fafc" font-family="sans-serif" font-size="14" font-weight="600">Video Demo Explicativo</text>
+  <text x="560" y="396" fill="#10b981" font-family="sans-serif" font-size="13" font-weight="700">01:45 MIN</text>
+</svg>

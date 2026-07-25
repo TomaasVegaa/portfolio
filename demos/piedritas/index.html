@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Las Piedritas - TPV Gastronómico</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --primary: #f97316; /* Naranja Las Piedritas */
+      --primary-hover: #ea580c;
+      --secondary: #3b82f6; /* Azul Caja */
+      --success: #22c55e;
+      --danger: #ef4444;
+      --border: #e2e8f0;
+      --sidebar: #1e293b;
+      --sidebar-hover: #334155;
+    }
+    
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+    
+    /* Layout */
+    .sidebar { width: 260px; background: var(--sidebar); color: #f8fafc; display: flex; flex-direction: column; transition: transform 0.3s; z-index: 50; }
+    .sidebar-brand { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 0.75rem; font-size: 1.3rem; font-weight: 800; color: white; }
+    .sidebar-brand span { color: var(--primary); font-size: 1.5rem; }
+    
+    .nav-menu { padding: 1.5rem 0; flex: 1; display: flex; flex-direction: column; gap: 0.25rem; }
+    .nav-item { padding: 0.85rem 1.5rem; color: #cbd5e1; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 1rem; font-weight: 600; font-size: 0.95rem; }
+    .nav-item:hover { background: var(--sidebar-hover); color: white; }
+    .nav-item.active { background: rgba(249, 115, 22, 0.15); color: var(--primary); border-left: 4px solid var(--primary); }
+    
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    
+    /* Header */
+    .header { height: 65px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; flex-shrink: 0; }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
+    .header-title { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+    
+    .header-right { display: flex; align-items: center; gap: 1.5rem; }
+    .user-info { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+    .user-avatar { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+    .btn-outline { border: 1px solid var(--border); background: transparent; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-outline:hover { background: var(--bg); }
+    
+    /* Views */
+    .view-content { display: none; flex: 1; overflow-y: auto; overflow-x: hidden; padding: 1.5rem; }
+    .view-content.active { display: flex; flex-direction: column; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* General Buttons */
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--secondary); color: white; }
+    .btn-secondary:hover { background: #2563eb; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    
+    /* View 1: Mesas */
+    .mesas-toolbar { display: flex; justify-content: space-between; margin-bottom: 1.5rem; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .mesas-legend { display: flex; gap: 1rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .legend-dot.libre { background: var(--success); }
+    .legend-dot.ocupada { background: var(--danger); }
+    .legend-dot.pago { background: var(--secondary); }
+    
+    .mesas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+    .mesa-card { background: var(--card); border: 2px solid transparent; border-radius: 12px; padding: 1.5rem 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer; transition: all 0.2s; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .mesa-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
+    
+    .mesa-card.libre { border-color: var(--success); }
+    .mesa-card.ocupada { border-color: var(--danger); }
+    .mesa-card.pago { border-color: var(--secondary); }
+    
+    .mesa-icon { font-size: 2rem; margin-bottom: 0.25rem; }
+    .mesa-name { font-weight: 800; font-size: 1.1rem; }
+    .mesa-status { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; }
+    .mesa-card.libre .mesa-status { background: #dcfce7; color: #166534; }
+    .mesa-card.ocupada .mesa-status { background: #fee2e2; color: #991b1b; }
+    .mesa-card.pago .mesa-status { background: #dbeafe; color: #1e40af; }
+    
+    /* View 2: Caja (Split View) */
+    .caja-layout { display: flex; gap: 1.5rem; height: 100%; flex-wrap: wrap; }
+    .caja-left { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 1rem; }
+    .caja-right { flex: 1.5; min-width: 350px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    
+    .table-list { background: var(--card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; flex: 1; overflow-y: auto; }
+    .table-list-item { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s; }
+    .table-list-item:hover { background: var(--bg); }
+    .table-list-item.selected { background: #fff7ed; border-left: 4px solid var(--primary); }
+    .table-list-item h4 { margin: 0; font-size: 1rem; }
+    .table-list-item span { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+    
+    /* Ticket Panel */
+    .ticket-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #fafafa; border-radius: 12px 12px 0 0; }
+    .ticket-header h3 { margin: 0; color: var(--primary); font-size: 1.2rem; }
+    .ticket-body { flex: 1; padding: 1.5rem; overflow-y: auto; background: #fff; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 20px 20px; }
+    .ticket-item { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; font-weight: 500; padding: 0.5rem; background: rgba(255,255,255,0.8); border-radius: 4px; border: 1px dashed #cbd5e1; }
+    .ticket-item .price { font-weight: 700; }
+    
+    .ticket-footer { padding: 1.5rem; border-top: 2px dashed var(--border); background: var(--card); border-radius: 0 0 12px 12px; }
+    .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .total-row span { font-size: 1.2rem; font-weight: 700; color: var(--text-muted); }
+    .total-row .total-amount { font-size: 2.5rem; font-weight: 800; color: var(--danger); letter-spacing: -1px; }
+    
+    .payment-methods { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .payment-btn { flex: 1; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); font-weight: 600; cursor: pointer; text-align: center; color: var(--text-muted); transition: 0.2s; }
+    .payment-btn.active { background: #eff6ff; border-color: var(--secondary); color: var(--secondary); }
+    
+    .ticket-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .btn-cobrar { grid-column: span 2; padding: 1.25rem; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+    
+    /* View 3: Arqueo */
+    .arqueo-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .metric-card { background: var(--card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .metric-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; }
+    .metric-card.ventas::before { background: var(--success); }
+    .metric-card.egresos::before { background: var(--danger); }
+    .metric-card.total::before { background: var(--primary); }
+    
+    .metric-title { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .metric-value { font-size: 2rem; font-weight: 800; color: var(--text); }
+    
+    .arqueo-layout { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .arqueo-breakdown { flex: 2; min-width: 300px; background: var(--card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); }
+    .arqueo-actions { flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 1rem; }
+    
+    .breakdown-row { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border); font-weight: 500; }
+    .breakdown-row:last-child { border-bottom: none; font-weight: 800; font-size: 1.2rem; margin-top: 0.5rem; }
+    
+    /* Modals Overlay */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: 0.2s; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .mobile-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 40; display: none; }
+    
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; height: 100%; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-overlay.open { display: block; }
+      .menu-toggle { display: block; }
+      .user-info span { display: none; }
+      .caja-layout { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span>●</span> Las Piedritas
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item active" onclick="switchView('mesas', this)">🪑 Plano de Mesas</div>
+      <div class="nav-item" onclick="switchView('caja', this)">💵 Caja & Cobro</div>
+      <div class="nav-item" onclick="switchView('arqueo', this)">📊 Arqueo de Caja</div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="header-title" id="headerTitle">Plano de Mesas</div>
+      </div>
+      <div class="header-right">
+        <div class="user-info">
+          <span>Admin</span>
+          <div class="user-avatar">A</div>
+        </div>
+        <button class="btn-outline">Salir</button>
+      </div>
+    </header>
+
+    <!-- VIEW 1: MESAS -->
+    <div class="view-content active" id="view-mesas">
+      <div class="mesas-toolbar">
+        <div class="mesas-legend">
+          <div class="legend-item"><div class="legend-dot libre"></div> Libres</div>
+          <div class="legend-item"><div class="legend-dot ocupada"></div> Ocupadas</div>
+          <div class="legend-item"><div class="legend-dot pago"></div> Esperando Pago</div>
+        </div>
+        <button class="btn btn-primary" onclick="alert('Demo: Función de agregar mesas deshabilitada.')">+ Nueva Mesa</button>
+      </div>
+      <div class="mesas-grid" id="mesasGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- VIEW 2: CAJA -->
+    <div class="view-content" id="view-caja">
+      <div class="caja-layout">
+        <div class="caja-left">
+          <h3 style="margin: 0;">Mesas Activas</h3>
+          <div class="table-list" id="activeTablesList">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+        
+        <div class="caja-right">
+          <div class="ticket-header">
+            <h3 id="ticketTitle">Seleccione una mesa</h3>
+            <span style="color: var(--text-muted); font-weight: 600;" id="ticketTime">-</span>
+          </div>
+          
+          <div class="ticket-body" id="ticketItems">
+            <div style="text-align: center; color: var(--text-muted); margin-top: 2rem;">
+              Las comandas aparecerán aquí
+            </div>
+          </div>
+          
+          <div class="ticket-footer">
+            <div class="total-row">
+              <span>Total a Cobrar</span>
+              <div class="total-amount" id="ticketTotal">$ 0</div>
+            </div>
+            
+            <div class="payment-methods">
+              <div class="payment-btn active">💵 Efectivo</div>
+              <div class="payment-btn">💳 Débito</div>
+              <div class="payment-btn">📱 MPago</div>
+            </div>
+            
+            <div class="ticket-actions">
+              <button class="btn btn-secondary">Imprimir Comanda</button>
+              <button class="btn btn-outline" style="color: var(--text);">Pre-Cuenta</button>
+              <button class="btn btn-primary btn-cobrar" onclick="cobrarMesa()">Cobrar y Cerrar Mesa</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: ARQUEO -->
+    <div class="view-content" id="view-arqueo">
+      <div class="arqueo-metrics">
+        <div class="metric-card ventas">
+          <div class="metric-title">Total Ventas</div>
+          <div class="metric-value" id="arqVentas">$ 0</div>
+        </div>
+        <div class="metric-card egresos">
+          <div class="metric-title">Total Egresos</div>
+          <div class="metric-value" id="arqEgresos">$ 0</div>
+        </div>
+        <div class="metric-card total">
+          <div class="metric-title">Caja Calculada</div>
+          <div class="metric-value" id="arqTotal">$ 0</div>
+        </div>
+      </div>
+      
+      <div class="arqueo-layout">
+        <div class="arqueo-breakdown">
+          <h3 style="margin-top: 0;">Desglose por Medios de Pago</h3>
+          <div class="breakdown-row">
+            <span>Efectivo</span>
+            <span id="arqEfectivo">$ 0</span>
+          </div>
+          <div class="breakdown-row">
+            <span>MercadoPago</span>
+            <span>$ 0</span>
+          </div>
+          <div class="breakdown-row">
+            <span>Débito / Crédito</span>
+            <span>$ 0</span>
+          </div>
+          <div class="breakdown-row">
+            <span>TOTAL VENTAS</span>
+            <span id="arqTotalBreakdown">$ 0</span>
+          </div>
+        </div>
+        
+        <div class="arqueo-actions">
+          <button class="btn btn-danger" style="padding: 1rem; font-size: 1.1rem;" onclick="addEgreso()">📉 Registrar Egreso</button>
+          <button class="btn btn-primary" style="padding: 1rem; font-size: 1.1rem;">🔒 Cierre de Caja Z</button>
+          <button class="btn btn-outline" style="padding: 1rem;">🖨️ Imprimir Resumen</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- STATE ---
+    let mesas = [
+      { id: 1, name: "Mesa 1", status: "ocupada", time: "45 min", total: 18500, items: [
+        { name: "2x Hamburguesa Completa", price: 9000 },
+        { name: "1x Porción Papas Fritas", price: 3500 },
+        { name: "3x Cerveza Pinta", price: 6000 }
+      ]},
+      { id: 2, name: "Mesa 2", status: "libre", time: "-", total: 0, items: [] },
+      { id: 3, name: "Mesa 3", status: "pago", time: "1h 10m", total: 24000, items: [
+        { name: "1x Parrillada para 2", price: 18000 },
+        { name: "2x Gaseosa Línea Coca", price: 3000 },
+        { name: "1x Vino Tinto Malbec", price: 3000 }
+      ]},
+      { id: 4, name: "Mesa 4", status: "libre", time: "-", total: 0, items: [] },
+      { id: 5, name: "Mesa 5", status: "ocupada", time: "15 min", total: 8500, items: [
+        { name: "1x Pizza Muzzarella", price: 5500 },
+        { name: "2x Cerveza Lata", price: 3000 }
+      ]},
+      { id: 6, name: "Barra 1", status: "libre", time: "-", total: 0, items: [] },
+      { id: 7, name: "Barra 2", status: "libre", time: "-", total: 0, items: [] },
+      { id: 8, name: "Barra 3", status: "ocupada", time: "5 min", total: 2500, items: [
+        { name: "1x Café con Leche", price: 1500 },
+        { name: "2x Medialunas", price: 1000 }
+      ]},
+    ];
+
+    let ventasTotales = 145000;
+    let egresosTotales = 12000;
+    let selectedMesaId = null;
+
+    // --- NAVIGATION ---
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('open');
+    }
+
+    function switchView(viewId, navEl) {
+      document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
+      
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      navEl.classList.add('active');
+      
+      document.getElementById('headerTitle').innerText = navEl.innerText.replace(/[🪑💵📊]/g, '').trim();
+      
+      if(window.innerWidth <= 768) toggleSidebar();
+      
+      if(viewId === 'mesas') renderMesas();
+      if(viewId === 'caja') renderCajaList();
+      if(viewId === 'arqueo') renderArqueo();
+    }
+
+    // --- RENDERERS ---
+    function renderMesas() {
+      const grid = document.getElementById('mesasGrid');
+      grid.innerHTML = mesas.map(m => `
+        <div class="mesa-card ${m.status}" onclick="handleMesaClick(${m.id})">
+          <div class="mesa-icon">🪑</div>
+          <div class="mesa-name">${m.name}</div>
+          <div class="mesa-status">${m.status === 'libre' ? 'Libre' : (m.status === 'ocupada' ? m.time : 'Cobrando')}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderCajaList() {
+      const list = document.getElementById('activeTablesList');
+      const activas = mesas.filter(m => m.status !== 'libre');
+      
+      if(activas.length === 0) {
+        list.innerHTML = `<div style="padding: 2rem; text-align: center; color: #94a3b8;">No hay mesas activas</div>`;
+        return;
+      }
+      
+      list.innerHTML = activas.map(m => `
+        <div class="table-list-item ${selectedMesaId === m.id ? 'selected' : ''}" onclick="selectMesaToTicket(${m.id})">
+          <div>
+            <h4>${m.name}</h4>
+            <span>Tiempo: ${m.time}</span>
+          </div>
+          <div style="font-weight: 800; color: var(--danger)">
+            $ ${m.total.toLocaleString('es-AR')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderTicket() {
+      const mesa = mesas.find(m => m.id === selectedMesaId);
+      if(!mesa) return;
+      
+      document.getElementById('ticketTitle').innerText = `Ticket: ${mesa.name}`;
+      document.getElementById('ticketTime').innerText = `Tiempo: ${mesa.time}`;
+      document.getElementById('ticketTotal').innerText = `$ ${mesa.total.toLocaleString('es-AR')}`;
+      
+      const itemsContainer = document.getElementById('ticketItems');
+      itemsContainer.innerHTML = mesa.items.map(item => `
+        <div class="ticket-item">
+          <span>${item.name}</span>
+          <span class="price">$ ${item.price.toLocaleString('es-AR')}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderArqueo() {
+      document.getElementById('arqVentas').innerText = `$ ${ventasTotales.toLocaleString('es-AR')}`;
+      document.getElementById('arqEgresos').innerText = `$ ${egresosTotales.toLocaleString('es-AR')}`;
+      document.getElementById('arqTotal').innerText = `$ ${(ventasTotales - egresosTotales).toLocaleString('es-AR')}`;
+      
+      document.getElementById('arqEfectivo').innerText = `$ ${ventasTotales.toLocaleString('es-AR')}`;
+      document.getElementById('arqTotalBreakdown').innerText = `$ ${ventasTotales.toLocaleString('es-AR')}`;
+    }
+
+    // --- ACTIONS ---
+    function handleMesaClick(id) {
+      const mesa = mesas.find(m => m.id === id);
+      if(mesa.status === 'libre') {
+        const confirmOpen = confirm(`¿Abrir ${mesa.name}?`);
+        if(confirmOpen) {
+          mesa.status = 'ocupada';
+          mesa.time = '1 min';
+          mesa.items = [{name: 'Cubiertos / Servicio', price: 1500}];
+          mesa.total = 1500;
+          renderMesas();
+        }
+      } else {
+        // Ir a caja
+        selectedMesaId = id;
+        document.querySelectorAll('.nav-item')[1].click(); // Simula click en Caja
+      }
+    }
+
+    function selectMesaToTicket(id) {
+      selectedMesaId = id;
+      renderCajaList();
+      renderTicket();
+    }
+
+    function cobrarMesa() {
+      if(!selectedMesaId) return alert("Seleccione una mesa primero.");
+      
+      const mesa = mesas.find(m => m.id === selectedMesaId);
+      
+      const btn = document.querySelector('.btn-cobrar');
+      const originalText = btn.innerText;
+      btn.innerText = "PROCESANDO...";
+      btn.style.opacity = "0.7";
+      btn.style.pointerEvents = "none";
+      
+      setTimeout(() => {
+        ventasTotales += mesa.total;
+        
+        mesa.status = 'libre';
+        mesa.total = 0;
+        mesa.items = [];
+        mesa.time = '-';
+        selectedMesaId = null;
+        
+        btn.innerText = originalText;
+        btn.style.opacity = "1";
+        btn.style.pointerEvents = "auto";
+        
+        alert(`¡Cierre exitoso! La ${mesa.name} ha sido cobrada y liberada.`);
+        
+        document.getElementById('ticketTitle').innerText = `Seleccione una mesa`;
+        document.getElementById('ticketTime').innerText = `-`;
+        document.getElementById('ticketTotal').innerText = `$ 0`;
+        document.getElementById('ticketItems').innerHTML = `<div style="text-align: center; color: var(--text-muted); margin-top: 2rem;">Las comandas aparecerán aquí</div>`;
+        
+        renderCajaList();
+      }, 1000);
+    }
+    
+    function addEgreso() {
+      const amount = prompt("Ingrese el monto del retiro/egreso:");
+      if(amount && !isNaN(amount)) {
+        egresosTotales += parseFloat(amount);
+        renderArqueo();
+      }
+    }
+
+    // Init UI
+    renderMesas();
+  </script>
+</body>
+</html>
