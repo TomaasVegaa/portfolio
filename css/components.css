@@ -356,17 +356,14 @@
   width: 140px;
   height: 140px;
   border-radius: var(--radius-full);
-  background: rgba(30, 41, 59, 0.6);
-  border: 2px solid transparent;
-  background-image: linear-gradient(#1e293b, #1e293b), linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #3b82f6 100%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+  background: var(--surface-card);
+  border: 4px solid var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 2rem;
-  box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
-  animation: float 4s ease-in-out infinite;
+  box-shadow: var(--shadow-md);
+  /* Removed animation and neon gradient for a professional solid look */
 }
 
 .about-avatar-glow svg {
